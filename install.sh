@@ -1,42 +1,39 @@
 #!/bin/bash
-# NBclaw Linux/macOS 安装脚本
-# 用法: curl -fsSL https://raw.githubusercontent.com/jcwb520/NBclaw/main/install.sh | bash
+# install.sh - Linux Native
 
-set -e
+echo "=== NBclaw Linux Installer ==="
 
-REPO="jcwb520/NBclaw"
-INSTALL_DIR="$HOME/NBclaw"
-
-echo "=== NBclaw 安装器 ==="
-echo "安装目录: $INSTALL_DIR"
-
-# 清理旧目录（如果存在）
-if [ -d "$INSTALL_DIR" ]; then
-    echo "发现旧安装，正在删除..."
-    rm -rf "$INSTALL_DIR"
+# 1. 获取 Token
+read -p "请输入 GitHub Personal Access Token: " TOKEN
+if [ -z "$TOKEN" ]; then
+    echo "Token 不能为空"
+    exit 1
 fi
+read -p "请输入 GitHub 用户名: " USERNAME
 
-# 克隆仓库
-echo "正在克隆 NBclaw..."
-git clone "https://github.com/${REPO}.git" "$INSTALL_DIR"
+REPO="NBclaw"
+INSTALL_DIR="$HOME/NBclaw"
+REPO_URL="https://${TOKEN}@github.com/${USERNAME}/${REPO}.git"
 
+# 2. 克隆
+if [ ! -d "$INSTALL_DIR" ]; then
+    git clone --depth=1 "$REPO_URL" "$INSTALL_DIR"
+else
+    cd "$INSTALL_DIR" && git pull
+fi
 cd "$INSTALL_DIR"
 
-# 创建虚拟环境
-echo "正在创建 Python 虚拟环境..."
-python3 -m venv venv
-source venv/bin/activate
+# 3. 安装依赖（系统级或用户级）
+pip3 install --upgrade pip --user
+pip3 install -r requirements.txt --user
 
-# 安装依赖
-echo "正在安装依赖..."
-pip install --upgrade pip
-pip install -r requirements.txt
+# 4. 写配置
+cat > .env << EOF
+GITHUB_USER=$USERNAME
+GITHUB_REPO=$REPO
+GITHUB_TOKEN=$TOKEN
+MODEL=ollama
+OLLAMA_MODEL=qwen3:4b
+EOF
 
-# 启动引导
-echo "正在启动引导程序..."
-python bootstrap.py
-
-echo ""
-echo "=== 安装完成 ==="
-echo "激活环境: cd $INSTALL_DIR && source venv/bin/activate"
-echo "启动 NBclaw: python bootstrap.py"
+echo "✅ 安装完成！启动命令: cd $INSTALL_DIR && python3 bootstrap.py"

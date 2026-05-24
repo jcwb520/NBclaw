@@ -1,130 +1,160 @@
-# NBclaw 🦶
+# NBclaw 🦶 — 本地 AI 基础设施管理器
 
-**本地 AI 基础设施管理器** — 框架一键安装 · 模型一键下载 · 万能技能吸收 · 对话主循环
-
-> 「我把它扔到 GitHub，别的智能体拿到链接就能一键装到自己电脑上。」
-
----
-
-## 核心功能
-
-### 📦 模型框架管理
-一条命令安装主流本地模型框架：
-
-| 框架 | 说明 |
-|------|------|
-| Ollama | 最流行，本地模型运行核心 |
-| llama.cpp | 纯 C/C++，CPU 高效，支持 GGUF |
-| vLLM | PagedAttention，GPU 高吞吐 |
-| LM Studio | 桌面 GUI，一键拉模型 |
-| Jan | 开源 ChatGPT 替代 |
-
-### 🤖 模型下载
-支持 Ollama / GGUF 双格式：
-
-```
-qwen2.5 (1.5b / 7b / 14b)
-llama3 / llama3.1 (8b)
-deepseek-r1 (7b / 14b)
-mistral / phi3 / gemma2 / codellama
-```
-
-### 🌐 万能技能吸收
-从任意 URL 吸收技能，不仅仅是 GitHub：
-
-```
-absorb https://github.com/psf/requests      ← GitHub 仓库
-absorb https://example.com/tool.py         ← 原始文件
-absorb https://example.com/blog/post.html  ← 网页代码块
-```
-
-### 🔄 自动同步
-启动时自动推送到 GitHub，变更不过夜。
-
-### 🔐 安全沙箱
-所有技能命令在临时目录执行，危险命令过滤，路径遍历保护。
+> **「我把它扔到 GitHub，别的智能体拿到链接就能一键装到自己电脑上。」**
+>
+> **Windows 双击即用 · Linux 一行命令 · 硬件自动侦察 · 模型自动推荐**
 
 ---
 
-## 快速安装
+## ⭐ v1.0.0 新特性
 
-```bash
-# Linux/macOS
-curl -fsSL https://raw.githubusercontent.com/jcwb520/NBclaw/main/install.sh | bash
+### 🖥️ 桌面客户端（重磅）
+- **Windows 原生 exe**：双击即用，无需安装 Python 环境
+- **硬件自动侦察**：启动时自动检测 CPU / 内存 / GPU / 显存
+- **模型智能推荐**：根据你的显存大小自动推荐最适合的模型
+- **在线 + 本地双模式**：填一个 DeepSeek API Key 即可对话，也可切换 Ollama 本地模型
+- **流式对话**：实时显示 AI 回复，体验丝滑
+- **对话历史**：侧边栏显示所有历史对话，可随时切换
+- **Markdown + 代码高亮**：代码块自动语法高亮
+- **快捷键支持**：`Ctrl+N` 新对话 / `Ctrl+K` 聚焦输入框
 
-# Windows PowerShell
+### 🤖 智能推荐逻辑
+| 你的显存 | 推荐模型 |
+|---------|---------|
+| 0GB（无独显）| qwen2.5:1.5b（CPU模式）|
+| 2-4GB | phi3:3.8b / qwen2.5:1.5b |
+| 4-6GB | qwen2.5:7b（⭐推荐）|
+| 6-8GB | qwen2.5:7b / llama3:8b |
+| 8GB+ | qwen2.5:14b / deepseek-r1:14b |
+
+---
+
+## 🚀 快速安装
+
+### Windows（双击即用）
+```powershell
+# 下载 exe（GitHub Release）
+# 然后直接双击 NBclaw.exe 运行
+
+# 或用安装脚本
 iwr https://raw.githubusercontent.com/jcwb520/NBclaw/main/install.ps1 -OutFile install.ps1; .\install.ps1
 ```
 
----
-
-## 命令列表
-
-```
-list frames        列出可安装的框架
-list models        列出可下载的模型
-install <框架名>   安装框架（如: install ollama）
-pull <模型ID>      下载模型（如: pull ollama:qwen2.5:7b）
-absorb <url>       从 URL 吸收技能（GitHub/网站/文件）
-list skills        列出所有技能
-enable skill <名>  启用技能
-status             查看环境状态
-exit               退出
-直接输入内容       与 AI 对话
+### Linux / macOS
+```bash
+curl -fsSL https://raw.githubusercontent.com/jcwb520/NBclaw/main/install.sh | bash
 ```
 
 ---
 
-## 推荐安装流程
+## 📦 功能一览
 
+### 框架管理
 ```
-1. install ollama              # 安装 Ollama 框架
-2. pull ollama:qwen2.5:7b     # 下载 qwen2.5 7B 模型
-3. 直接对话                    # 自动连接 Ollama
+ollama    — 最流行，本地模型运行核心
+llama.cpp — CPU 高效，GGUF 格式支持
+vllm      — GPU 高吞吐推理
+lm-studio — 桌面 GUI
+jan       — 开源 ChatGPT 替代
 ```
+
+### 模型下载
+```
+ollama:qwen2.5:1.5b   ollama:pull qwen2.5:1.5b
+ollama:qwen2.5:7b     ollama:pull qwen2.5:7b
+ollama:llama3:8b      ollama:pull llama3:8b
+ollama:deepseek-r1:7b ollama:pull deepseek-r1:7b
+...
+```
+
+### 万能技能吸收
+```
+absorb https://github.com/psf/requests     # GitHub 仓库
+absorb https://example.com/tool.py         # 单文件
+absorb https://example.com/post.html       # 网页代码块
+```
+
+### 桌面客户端（GUI）
+- 硬件自动侦察 → 模型智能推荐
+- 在线模式（DeepSeek API Key）
+- 本地模式（Ollama）
+- 流式对话 + Markdown 渲染
+- 对话历史 + 快捷键
+- 系统主题适配（深色/浅色）
 
 ---
 
-## 文件结构
+## 📁 文件结构
 
 ```
 NBclaw/
-├── bootstrap.py           主程序（命令路由 + 对话）
-├── model_frameworks.py    框架安装 + 模型下载
-├── repo_importer.py       万能技能吸收引擎
-├── skills/                技能存储目录
-│   └── __init__.py        技能加载器
-├── security/              安全模块
-│   └── __init__.py        沙箱执行器
-├── install.sh             Linux 安装脚本
-├── install.ps1           Windows 安装脚本
-├── requirements.txt       Python 依赖
+├── desktop.py            # 桌面客户端入口
+├── hardware.py           # 硬件侦察模块
+├── bootstrap.py         # CLI 主程序
+├── model_frameworks.py  # 框架管理
+├── repo_importer.py     # 技能吸收引擎
+├── build.py             # PyInstaller 打包脚本
+├── skills/              # 技能存储
+│   └── __init__.py
+├── security/            # 安全沙箱
+│   └── __init__.py
+├── install.sh           # Linux 安装
+├── install.ps1          # Windows 安装
+├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## 自举流程
+## 🔧 从源码运行
 
-```
-用户 clone → 运行 bootstrap.py → 自动拉模型 → 对话
-  ↓
-absorb <GitHub URL> → 生成技能 → enable skill → 技能可用
-  ↓
-变更自动 push → 其他机器 clone → 获得相同能力
+```bash
+# 1. 克隆
+git clone https://github.com/jcwb520/NBclaw.git
+cd NBclaw
+
+# 2. 安装依赖
+pip install -r requirements.txt
+pip install ttkthemes markdown pygments openai python-dotenv requests
+
+# 3. 运行桌面客户端
+python desktop.py
+
+# 或运行 CLI 版本
+python bootstrap.py
 ```
 
 ---
 
-## 下一步进化方向
+## 🎯 使用流程
 
-- [ ] 技能依赖自动安装（requirements.txt 分析）
-- [ ] 技能测试沙箱（自动单元测试）
-- [ ] 技能版本管理（支持回滚）
-- [ ] 跨技能协作（多技能组合完成复杂任务）
-- [ ] PyInstaller 打包成单文件 exe
-- [ ] GitHub Release 自动更新
+```
+① 打开 NBclaw
+② （自动）硬件侦察 → 显示推荐模型
+③ 填入 DeepSeek API Key（在线模式）
+   或 install ollama + pull 模型（本地模式）
+④ 直接对话
+⑤ 想学新技能 → absorb <URL>
+```
 
 ---
 
-**一句话定位**：NBclaw 是一个「会自己长大的桌面 AI 软件」——你把它扔到 GitHub，别的智能体拿到链接就能一键装到自己电脑上，并具备从任何来源吸收新技能的能力。
+## 📦 打包构建
+
+```bash
+# Windows exe
+python build.py windows
+
+# Linux 可执行文件
+python build.py linux
+
+# 全部
+python build.py all
+```
+
+---
+
+**NBclaw = 自举型 AI 基础设施管理器**
+- 你把它扔到 GitHub → 别的智能体能一键装到自己的电脑
+- 它会自动侦察硬件 → 推荐最适合的模型
+- 你只填一个 API Key → 它帮你搞定一切
